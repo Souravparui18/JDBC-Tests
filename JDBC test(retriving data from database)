@@ -1,0 +1,51 @@
+import com.mysql.cj.protocol.Resultset;
+import com.mysql.jdbc.Driver;
+
+import java.sql.*;
+import java.util.*;
+
+public class Main {
+    static void main(String[] args) {
+
+        String url = "jdbc:mysql://localhost:3306/souravdb";
+        String username = "root";
+        String password = "Chitt@r@nj@n09";
+        String query = "";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("Driver loaded succesfully!!!");
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getException());
+        }
+
+        try{
+            Connection con = DriverManager.getConnection(url,username,password);
+            System.out.println("Connection Established Succesfully !!");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String job_title = rs.getString("job_title");
+                double salary = rs.getDouble("salary");
+
+                System.out.println();
+                System.out.println("======================");
+                System.out.println("ID: " + id);
+                System.out.println("name: " + name);
+                System.out.println("job_title: " + job_title);
+                System.out.println("salary: " + salary);
+
+            }
+            rs.close();
+            stmt.close();
+            con.close();
+            System.out.println("Connection closed Succesfully");
+
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+}
