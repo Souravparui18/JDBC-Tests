@@ -1,0 +1,57 @@
+import com.mysql.cj.protocol.Resultset;
+import com.mysql.jdbc.Driver;
+
+import java.io.*;
+import java.sql.*;
+import java.util.*;
+import java.util.logging.FileHandler;
+
+public class Main {
+    static void main(String[] args) throws ClassNotFoundException, SQLException {
+
+        String url = "jdbc:mysql://localhost:3306/souravdb";
+        String username = "root";
+        String password = "Chitt@r@nj@n09";
+        String withdrawQuery = "UPDATE accounts SET balance = balance - ? WHERE account_number = ?";
+        String depositQuery = "UPDATE accounts SET balance = balance + ? WHERE account_number = ?";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("Driver loaded succesfully!!!");
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getException());
+        }
+
+        try{
+            Connection con = DriverManager.getConnection(url,username,password);
+            System.out.println("Connection Established Succesfully !!");
+            con.setAutoCommit(false);
+            try {
+                PreparedStatement withdrawStatment = con.prepareStatement(withdrawQuery);
+                PreparedStatement depositStatment = con.prepareStatement(depositQuery);
+                withdrawStatment.setDouble(1, 500);
+                withdrawStatment.setString(2, "account123");
+                depositStatment.setDouble(1, 500);
+                depositStatment.setString(2, "account456");
+                withdrawStatment.executeUpdate();
+                depositStatment.executeUpdate();
+                con.commit();
+                System.out.println("Transaction Successfull");
+            } catch (SQLException e) {
+                con.rollback();
+                System.out.println("Transaction failed");
+            }
+
+
+
+            con.close();
+            System.out.println();
+            System.out.println("Connection Closed Succesfully!!!");
+
+
+
+        }catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+}
